@@ -11,6 +11,21 @@ import (
 
 func (s *Service) registerHandlers() {
 	s.router.HandleFunc("/users", s.RegisterUser()).Methods("POST")
+	s.router.HandleFunc("/users", s.GetAllUsers()).Methods("GET")
+}
+
+func (s *Service) GetAllUsers() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		users := s.Store.GetUsers()
+		if err := json.NewEncoder(w).Encode(users); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}
 }
 
 func (s *Service) RegisterUser() http.HandlerFunc {
