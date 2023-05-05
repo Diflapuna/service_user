@@ -25,6 +25,11 @@ func NewStore() *Store {
 
 func (s *Store) AddUser(u models.User) {
 	s.Storage.Users = append(s.Storage.Users, u)
+
+	s.DB.QueryRow(
+		"INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4);",
+		u.Id, u.Name, u.Email, u.Password,
+	)
 }
 
 func (s *Store) GetUsers() models.Users {
@@ -33,7 +38,7 @@ func (s *Store) GetUsers() models.Users {
 }
 
 func newDB() *sqlx.DB {
-	urlExample := "postgres://postgres:14881488@localhost:5432/frog"
+	urlExample := "postgres://user:123456789@localhost:5430/test1"
 	sql.Register("wrapper", stdlib.GetDefaultDriver())
 	wdb, err := sql.Open("wrapper", urlExample)
 	if err != nil {
