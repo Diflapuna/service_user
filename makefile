@@ -7,6 +7,8 @@ create_migration:
 	migrate create -ext sql -dir db/migrations -seq ${name}
 migrate:
 	migrate -database 'postgres://user:123456789@localhost:5430/test1?sslmode=disable' -path ./db/migrations up
+migrate_down:
+	migrate -database 'postgres://user:123456789@localhost:5430/test1?sslmode=disable' -path ./db/migrations down
 
 db_test:
 	docker run --name test-pg -p 5430:5432 -e POSTGRES_USER=user -e POSTGRES_PASSWORD=123456789 -d postgres:latest
