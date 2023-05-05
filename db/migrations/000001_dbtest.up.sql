@@ -1,5 +1,3 @@
-SELECT 'CREATE DATABASE test2'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'test2')\gexec
 CREATE TABLE users (
     id UUID PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
