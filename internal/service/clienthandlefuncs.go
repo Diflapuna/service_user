@@ -12,6 +12,8 @@ import (
 func (s *Service) registerHandlers() {
 	s.router.HandleFunc("/users", s.RegisterUser()).Methods("POST")
 	s.router.HandleFunc("/users", s.GetAllUsers()).Methods("GET")
+	s.router.HandleFunc("/user/password", s.EditPassword()).Methods("POST")
+	s.router.HandleFunc("/user/email", s.EditEmail()).Methods("POST")
 }
 
 func (s *Service) GetAllUsers() http.HandlerFunc {
@@ -42,5 +44,47 @@ func (s *Service) RegisterUser() http.HandlerFunc {
 		s.Store.AddUser(*user)
 		w.WriteHeader(http.StatusCreated)
 		fmt.Println(s.Store.Storage.Users)
+	}
+}
+
+func (s *Service) EditPassword() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := &models.User{}
+		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+
+			return
+		}
+
+		err := s.Store.EditPassword(user.Password, user.Id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func (s *Service) EditEmail() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := &models.User{}
+		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+
+			return
+		}
+
+		err := s.Store.EditEmail(user.Email, user.Id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 	}
 }

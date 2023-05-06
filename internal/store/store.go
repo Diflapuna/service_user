@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/NotYourAverageFuckingMisery/animello/internal/models"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 )
@@ -48,14 +49,34 @@ func (s *Store) GetUsers() models.Users {
 	return s.Storage
 }
 
-func (s *Store) DeleteUser(){
+func (s *Store) DeleteUser() {
 
 }
 
-func (s *Store) EditPassword() {
+func (s *Store) EditPassword(newPassword string, u uuid.UUID) error {
+	_, err := s.DB.Exec(
+		"UPDATE users SET password = $1 WHERE id = $2;",
+		newPassword, u,
+	)
 
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
 
-func (s *Store) EditEmail() {
+func (s *Store) EditEmail(newEmail string, u uuid.UUID) error {
+	_, err := s.DB.Exec(
+		"UPDATE users SET email = $1 WHERE id = $2;",
+		newEmail, u,
+	)
 
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	return nil
 }
