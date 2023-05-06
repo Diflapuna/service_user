@@ -19,8 +19,19 @@ func NewStore() *Store {
 		Storage: models.Users{},
 		DB:      newDB(),
 	}
-
 	return s
+}
+
+func newDB() *sqlx.DB {
+	urlExample := "postgres://user:123456789@localhost:5430/test1"
+	sql.Register("wrapper", stdlib.GetDefaultDriver())
+	wdb, err := sql.Open("wrapper", urlExample)
+	if err != nil {
+		log.Fatal(err)
+	}
+	db := sqlx.NewDb(wdb, "wrapper")
+
+	return db
 }
 
 func (s *Store) AddUser(u models.User) {
@@ -37,14 +48,14 @@ func (s *Store) GetUsers() models.Users {
 	return s.Storage
 }
 
-func newDB() *sqlx.DB {
-	urlExample := "postgres://user:123456789@localhost:5430/test1"
-	sql.Register("wrapper", stdlib.GetDefaultDriver())
-	wdb, err := sql.Open("wrapper", urlExample)
-	if err != nil {
-		log.Fatal(err)
-	}
-	db := sqlx.NewDb(wdb, "wrapper")
+func (s *Store) DeleteUser(){
 
-	return db
+}
+
+func (s *Store) EditPassword() {
+
+}
+
+func (s *Store) EditEmail() {
+
 }
