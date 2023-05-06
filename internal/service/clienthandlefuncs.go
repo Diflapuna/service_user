@@ -17,7 +17,11 @@ func (s *Service) registerHandlers() {
 func (s *Service) GetAllUsers() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		users := s.Store.GetUsers()
+		users, err := s.Store.GetUsers()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 		if err := json.NewEncoder(w).Encode(users); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 
