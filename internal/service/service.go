@@ -16,9 +16,12 @@ type Service struct {
 }
 
 func NewService() *Service {
+	
+	log := NewLogger()
+	
 	s := &Service{
-		Log:    NewLogger(),
-		Store:  store.NewStore(),
+		Log:    log,
+		Store:  store.NewStore(log),
 		router: mux.NewRouter(),
 	}
 	s.registerHandlers()

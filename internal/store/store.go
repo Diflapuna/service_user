@@ -2,76 +2,36 @@ package store
 
 import (
 	"database/sql"
-	"log"
 
 	"github.com/NotYourAverageFuckingMisery/animello/internal/models"
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 )
 
 type Store struct {
 	Storage models.Users
 	DB      *sqlx.DB
+	Logger  *zap.SugaredLogger
 }
 
-func NewStore() *Store {
+func NewStore(l *zap.SugaredLogger) *Store {
 	s := &Store{
 		Storage: models.Users{},
-		DB:      newDB(),
+		DB:      newDB(l),
+		Logger:  l,
 	}
 	return s
 }
 
-func newDB() *sqlx.DB {
+func newDB(l *zap.SugaredLogger) *sqlx.DB {
 	urlExample := "postgres://user:123456789@localhost:5430/test1"
 	sql.Register("wrapper", stdlib.GetDefaultDriver())
 	wdb, err := sql.Open("wrapper", urlExample)
 	if err != nil {
-		log.Fatal(err)
+		l.Fatalf("Can't connect to DB %w", err)
 	}
 	db := sqlx.NewDb(wdb, "wrapper")
 
 	return db
-}
-
-func (s *Store) AddUser(u models.User) {
-	s.Storage.Users = append(s.Storage.Users, u)
-
-	s.DB.QueryRow(
-		"INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4);",
-		u.Id, u.Name, u.Email, u.Password,
-	)
-}
-
-func (s *Store) DeleteUser() {
-
-}
-
-func (s *Store) EditPassword(newPassword string, u uuid.UUID) error {
-	_, err := s.DB.Exec(
-		"UPDATE users SET password = $1 WHERE id = $2;",
-		newPassword, u,
-	)
-
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
-}
-
-func (s *Store) EditEmail(newEmail string, u uuid.UUID) error {
-	_, err := s.DB.Exec(
-		"UPDATE users SET email = $1 WHERE id = $2;",
-		newEmail, u,
-	)
-
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
-	return nil
 }
