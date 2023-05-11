@@ -1,8 +1,6 @@
 package store
 
 import (
-	"log"
-
 	"github.com/NotYourAverageFuckingMisery/animello/internal/models"
 	"github.com/google/uuid"
 )
@@ -13,7 +11,7 @@ func (s *Store) GetUsers() (models.Users, error) {
 		"SELECT * FROM users;",
 	)
 	if err != nil {
-		log.Println(err)
+		s.Logger.Errorf("Can't get users %w", err)
 		return models.Users{}, err
 	}
 	user := models.User{}

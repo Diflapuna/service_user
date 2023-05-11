@@ -40,6 +40,7 @@ func (s *Service) RegisterUser() http.HandlerFunc {
 		user := &models.User{}
 		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			s.Log.Errorf("Failed to decode request: %w", err)
 
 			return
 		}
@@ -57,6 +58,7 @@ func (s *Service) EditPassword() http.HandlerFunc {
 		user := &models.User{}
 		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			s.Log.Errorf("Failed to decode request: %w", err)
 
 			return
 		}
@@ -78,6 +80,7 @@ func (s *Service) EditEmail() http.HandlerFunc {
 		user := &models.User{}
 		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
+			s.Log.Errorf("Failed to decode request: %w", err)
 
 			return
 		}
