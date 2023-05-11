@@ -44,11 +44,6 @@ func (s *Store) AddUser(u models.User) {
 	)
 }
 
-func (s *Store) GetUsers() models.Users {
-
-	return s.Storage
-}
-
 func (s *Store) DeleteUser() {
 
 }

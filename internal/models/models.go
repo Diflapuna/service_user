@@ -5,10 +5,10 @@ import (
 )
 
 type User struct {
-	Id       uuid.UUID `json:"id"`
-	Name     string    `json:"name"`
-	Email    string    `json:"email"`
-	Password string    `json:"password"`
+	Id       uuid.UUID `json:"id" db:"id"`
+	Name     string    `json:"name" db:"name"`
+	Email    string    `json:"email" db:"email"`
+	Password string    `json:"password" db:"password"`
 }
 
 type Users struct {
