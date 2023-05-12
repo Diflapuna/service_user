@@ -32,8 +32,18 @@ func (s *Store) AddUser(u models.User) {
 	)
 }
 
-func (s *Store) DeleteUser() {
+func (s *Store) DeleteUser(u uuid.UUID) error {
+	_, err := s.DB.Exec(
+		"DELETE FROM users WHERE id = $1;",
+		u,
+	)
 
+	if err != nil {
+		s.Logger.Errorf("Can't delete user from db %w", err)
+		return err
+	}
+
+	return nil
 }
 
 func (s *Store) EditPassword(newPassword string, u uuid.UUID) error {
