@@ -27,8 +27,8 @@ func (s *Store) AddUser(u models.User) {
 	s.Storage.Users = append(s.Storage.Users, u)
 
 	s.DB.QueryRow(
-		"INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4);",
-		u.Id, u.Name, u.Email, u.Password,
+		"INSERT INTO users (id, name, email, password, about) VALUES ($1, $2, $3, $4, $5);",
+		u.Id, u.Name, u.Email, u.Password, u.About,
 	)
 }
 
@@ -58,6 +58,20 @@ func (s *Store) EditEmail(newEmail string, u uuid.UUID) error {
 
 	if err != nil {
 		s.Logger.Errorf("Can't change email %w", err)
+		return err
+	}
+
+	return nil
+}
+
+func (s *Store) EditAbout(newAbout string, u uuid.UUID) error {
+	_, err := s.DB.Exec(
+		"UPDATE users SET about = $1 WHERE id = $2;",
+		newAbout, u,
+	)
+
+	if err != nil {
+		s.Logger.Errorf("Can't change about info %w", err)
 		return err
 	}
 

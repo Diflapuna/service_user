@@ -14,6 +14,7 @@ func (s *Service) registerHandlers() {
 	s.router.HandleFunc("/users", s.GetAllUsers()).Methods("GET")
 	s.router.HandleFunc("/user/password", s.EditPassword()).Methods("POST")
 	s.router.HandleFunc("/user/email", s.EditEmail()).Methods("POST")
+	s.router.HandleFunc("/user/about", s.EditAbout()).Methods("POST")
 }
 
 func (s *Service) GetAllUsers() http.HandlerFunc {
@@ -86,6 +87,28 @@ func (s *Service) EditEmail() http.HandlerFunc {
 		}
 
 		err := s.Store.EditEmail(user.Email, user.Id)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}
+}
+
+func (s *Service) EditAbout() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := &models.User{}
+		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			s.Log.Errorf("Failed to decode request: %w", err)
+
+			return
+		}
+
+		err := s.Store.EditAbout(user.About, user.Id)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 

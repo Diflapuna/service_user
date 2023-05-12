@@ -9,6 +9,7 @@ type User struct {
 	Name     string    `json:"name" db:"name"`
 	Email    string    `json:"email" db:"email"`
 	Password string    `json:"password" db:"password"`
+	About    string    `json:"about" db:"about"`
 }
 
 type Users struct {
