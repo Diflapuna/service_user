@@ -14,10 +14,10 @@ func (s *Store) GetUsers() (models.Users, error) {
 		s.Logger.Errorf("Can't get users %w", err)
 		return models.Users{}, err
 	}
-	user := models.User{}
+	user := &models.User{}
 	for rows.Next() {
 		rows.StructScan(user)
-		users.Users = append(users.Users, user)
+		users.Users = append(users.Users, *user)
 	}
 
 	return users, nil
