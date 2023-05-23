@@ -32,7 +32,7 @@ func (s *Service) GetAllUsers() http.HandlerFunc {
 			return
 		}
 
-		w.WriteHeader(http.StatusOK)
+		//w.WriteHeader(http.StatusOK)  superfluous response.WriteHeader call
 	}
 }
 

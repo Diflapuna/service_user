@@ -15,3 +15,7 @@ type User struct {
 type Users struct {
 	Users []User `json:"users"`
 }
+
+type Greeting struct {
+	Greeting string `json:"greeting"`
+}

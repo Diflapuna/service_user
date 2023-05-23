@@ -1,0 +1,32 @@
+{
+    "name": "user",
+    "port": "6969",
+    "ip": "127.0.0.1",
+    "endpoints": [
+        {
+        "url": "/users",
+        "protected": false,
+        "methods": ["GET", "POST"]
+    },
+    {
+        "url": "/user/password",
+        "protected": false,
+        "methods": ["POST"]
+    },
+    {
+        "url": "/user/email",
+        "protected": false,
+        "methods": ["POST"]
+    },
+    {
+        "url": "/user/about",
+        "protected": false,
+        "methods": ["POST"]
+    },
+    {
+        "url": "/user/delete",
+        "protected": false,
+        "methods": ["POST"]
+    }
+]
+}
