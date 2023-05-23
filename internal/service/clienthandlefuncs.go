@@ -10,12 +10,12 @@ import (
 )
 
 func (s *Service) registerHandlers() {
-	s.router.HandleFunc("/users", s.RegisterUser()).Methods("POST")
-	s.router.HandleFunc("/users", s.GetAllUsers()).Methods("GET")
-	s.router.HandleFunc("/user/password", s.EditPassword()).Methods("POST")
-	s.router.HandleFunc("/user/email", s.EditEmail()).Methods("POST")
-	s.router.HandleFunc("/user/about", s.EditAbout()).Methods("POST")
-	s.router.HandleFunc("/user/delete", s.DeleteUser()).Methods("POST")
+	s.router.HandleFunc("/users", s.RegisterUser()).Methods(http.MethodPost)
+	s.router.HandleFunc("/users", s.GetAllUsers()).Methods(http.MethodGet)
+	s.router.HandleFunc("/user/password", s.EditPassword()).Methods(http.MethodPost)
+	s.router.HandleFunc("/user/email", s.EditEmail()).Methods(http.MethodPost)
+	s.router.HandleFunc("/user/about", s.EditAbout()).Methods(http.MethodPost)
+	s.router.HandleFunc("/user/delete", s.DeleteUser()).Methods(http.MethodPost)
 }
 
 func (s *Service) GetAllUsers() http.HandlerFunc {
