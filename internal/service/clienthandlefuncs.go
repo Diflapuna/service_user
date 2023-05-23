@@ -16,6 +16,7 @@ func (s *Service) registerHandlers() {
 	s.router.HandleFunc("/user/email", s.EditEmail()).Methods(http.MethodPost)
 	s.router.HandleFunc("/user/about", s.EditAbout()).Methods(http.MethodPost)
 	s.router.HandleFunc("/user/delete", s.DeleteUser()).Methods(http.MethodPost)
+	s.router.HandleFunc("/login", s.LoginUser()).Methods(http.MethodPost)
 }
 
 func (s *Service) GetAllUsers() http.HandlerFunc {
@@ -51,6 +52,27 @@ func (s *Service) RegisterUser() http.HandlerFunc {
 		s.Store.AddUser(*user)
 		w.WriteHeader(http.StatusCreated)
 		fmt.Println(s.Store.Storage.Users)
+	}
+}
+
+func (s *Service) LoginUser() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := &models.User{}
+		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			s.Log.Errorf("Failed to decode request: %w", err)
+
+			return
+		}
+
+		if err := s.Store.LoginUser(user.Email, user.Password); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 	}
 }
 
