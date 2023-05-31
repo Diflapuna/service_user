@@ -1,6 +1,8 @@
 package store
 
 import (
+	"errors"
+
 	"github.com/NotYourAverageFuckingMisery/animello/internal/models"
 	"github.com/google/uuid"
 )
@@ -21,6 +23,27 @@ func (s *Store) GetUsers() (models.Users, error) {
 	}
 
 	return users, nil
+}
+
+func (s *Store) GetUserById(u uuid.UUID) (*models.User, error) {
+	user := &models.User{}
+	
+	row := s.DB.QueryRowx(
+		"SELECT name, email, about FROM users WHERE id = $1;",
+		u,
+	)
+
+	if err := row.StructScan(user); err != nil {
+		s.Logger.Errorf("Can't scan user struct %w", err)
+		return &models.User{}, err
+	}
+
+	if user.Name == ""{
+		s.Logger.Error("Invalid id")
+		return &models.User{}, errors.New("")
+	}
+
+	return user, nil
 }
 
 func (s *Store) AddUser(u models.User) {
