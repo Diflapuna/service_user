@@ -39,7 +39,7 @@ func (s *Store) GetUserById(u uuid.UUID) (*models.User, error) {
 	}
 
 	if user.Name == ""{
-		s.Logger.Error("Invalid id")
+		s.Logger.DPanic("Invalid id")
 		return &models.User{}, errors.New("")
 	}
 
@@ -100,6 +100,10 @@ func (s *Store) EditPassword(newPassword string, u uuid.UUID) error {
 		return err
 	}
 
+	if newPassword == ""{
+		s.Logger.DPanic("Password field is empty. Please, enter your password.")
+	}
+
 	return nil
 }
 
@@ -112,6 +116,10 @@ func (s *Store) EditEmail(newEmail string, u uuid.UUID) error {
 	if err != nil {
 		s.Logger.Errorf("Can't change email %w", err)
 		return err
+	}
+
+	if newEmail == ""{
+		s.Logger.DPanic("Email field is empty. Please, enter your email.")
 	}
 
 	return nil
