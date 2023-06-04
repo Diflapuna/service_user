@@ -1,6 +1,7 @@
 package tokens
 
 import (
+	"log"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -24,9 +25,12 @@ func (j *JWTMaker) CreateToken(userID uuid.UUID, rTokenID uuid.UUID, lifetime ti
 	if rTokenID == uuid.Nil {
 		payload.RtokenID = payload.TokenID
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, payload)
-	tokenString, err := token.SignedString([]byte(j.secretKey))
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+
+	key := []byte(j.secretKey)
+	tokenString, err := token.SignedString(key)
 	if err != nil {
+		log.Print(err)
 		return "", uuid.Nil, err
 	}
 

@@ -26,30 +26,10 @@ func (s *Store) GetUsers() (models.Users, error) {
 func (s *Store) AddUser(u models.User) {
 	s.Storage.Users = append(s.Storage.Users, u)
 
-	s.DB.QueryRow(
+	s.DB.QueryRowx(
 		"INSERT INTO users (id, name, email, password, about) VALUES ($1, $2, $3, $4, $5);",
 		u.Id, u.Name, u.Email, u.Password, u.About,
 	)
-}
-
-func (s *Store) LoginUser(email string, password string) error {
-	user := &models.User{}
-
-	row := s.DB.QueryRowx(
-		"SELECT id FROM users WHERE email = $1 AND password = $2;",
-		email, password,
-	)
-	if err := row.StructScan(user); err != nil {
-		s.Logger.Errorf("Can't scan user struct %w", err)
-		return err
-	}
-
-	if user.Id == uuid.Nil {
-		s.Logger.Error("Invalid login/password")
-	}
-
-	s.Logger.Info("Welcome to the club, buddy!")
-	return nil
 }
 
 func (s *Store) DeleteUser(u uuid.UUID) error {

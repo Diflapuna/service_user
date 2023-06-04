@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/NotYourAverageFuckingMisery/animello/internal/core/auth"
 	"github.com/NotYourAverageFuckingMisery/animello/internal/models"
 	"github.com/google/uuid"
 )
@@ -66,12 +67,23 @@ func (s *Service) LoginUser() http.HandlerFunc {
 			return
 		}
 
-		if err := s.Store.LoginUser(user.Email, user.Password); err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-
+		tokens, err := auth.Auth(s.Store, user.Email, user.Password)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-
+		rc := &http.Cookie{
+			Name:     "Refresh",
+			Value:    tokens.Refresh,
+			HttpOnly: true,
+		}
+		http.SetCookie(w, rc)
+		ac := &http.Cookie{
+			Name:     "Acsess",
+			Value:    tokens.Acsess,
+			HttpOnly: true,
+		}
+		http.SetCookie(w, ac)
 		w.WriteHeader(http.StatusOK)
 	}
 }

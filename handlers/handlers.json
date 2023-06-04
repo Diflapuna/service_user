@@ -27,6 +27,11 @@
         "url": "/user/delete",
         "protected": false,
         "methods": ["POST"]
+    },
+    {
+        "url": "/login",
+        "protected": false,
+        "methods": ["POST"]
     }
 ]
 }

@@ -61,7 +61,6 @@ func (s *Service) GreetGateway() {
 }
 
 func (s *Service) sendHandlersList() {
-	os.Mkdir("babka", os.ModeDir)
 	handlers, err := os.Open("handlers/handlers.json")
 	if err != nil {
 		s.Log.Fatal("Could not open handler list", err)
