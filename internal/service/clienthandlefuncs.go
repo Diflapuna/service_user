@@ -41,17 +41,12 @@ func (s *Service) GetAllUsers() http.HandlerFunc {
 func (s *Service) GetUserById() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		user := &models.User{}
-		if err := json.NewDecoder(r.Body).Decode(user); err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			s.Log.Errorf("Failed to decode request: %w", err)
-			return
-		}
+		userId := r.URL.Query().Get("id")
 
-		info, err := s.Store.GetUserById(user.Id)
+		info, err := s.Store.GetUserById(uuid.MustParse(userId))
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
-			s.Log.Errorf("Fuck you %w", err)
+			s.Log.Errorf("User not found %w", err)
 			return
 		}
 		if err := json.NewEncoder(w).Encode(info); err != nil {
